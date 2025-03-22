@@ -1,0 +1,1 @@
+const url = "https://www.figma.com/design/k7cbkwcEOXc7eSjEDQNEiV/Full-E-Commerce-Website-UI-UX-Design-(Community)?node-id=1-3&p=f&t=OZWEsR5WMLhDnLHa-0 ";
