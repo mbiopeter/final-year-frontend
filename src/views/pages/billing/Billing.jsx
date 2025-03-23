@@ -58,11 +58,14 @@ selectedPaymentMethod
 
     const handlePaymentRequests = async () => {
         try {
+            console.log(billedItems);
             setPaymentLoading(true);
             if (selectedPaymentMethod === 'bank') {
                 const stripeData = {
                     email: billingInfo.email,
+                    userId:userId,
                     cartItems: billedItems.map((item) => ({
+                        productId:item.productId,
                         img: item.img,
                         price: Number(item.price).toFixed(2),
                         product: item.product,
