@@ -48,7 +48,7 @@ const Products = ({ item }) => {
     };
 	return (
 		<div className="flex transition-transform duration-500 ease-in-out pb-6">
-			<div className="h-[350px] w-[200px] md:h-[320px] md:w-[220px]">
+			<div className="h-[350px] w-[170px]">
 				<div className="bg-gray-100 rounded-sm h-55 md:h-60 flex flex-col">
 					<div className="flex justify-between">
 						<p className="flex items-center h-4 w-12 bg-[#DB4444] m-3 justify-center rounded-md text-white text-xs p-2 font-semibold">

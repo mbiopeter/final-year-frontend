@@ -8,7 +8,6 @@ export const fetchProductsHelper = async (route, param) => {
 			: await axios.get(`${productsUrl}/${route}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching products:", error);
 		return null;
 	}
 };

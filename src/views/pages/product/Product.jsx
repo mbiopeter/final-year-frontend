@@ -20,6 +20,7 @@ const Product = ({ items, setItems }) => {
     const [loading, setLoading] = useState(false);
     const { productId } = useParams();
     const [wishList, setWishList] = useState([]);
+    const [rated, setRated] = useState(false)
 
     useEffect(() => {
         const handleFetch =async () => {
@@ -59,7 +60,7 @@ const Product = ({ items, setItems }) => {
             }
         };
         fetchData();
-    }, []);
+    }, [rated]);
 
 
     const product = getProductById(allProducts, productId) ;
@@ -147,6 +148,7 @@ const Product = ({ items, setItems }) => {
                 rating
             }
             //api request to rate a product
+            setRated(true);
             await axios.post(`${productsUrl}/rating/create`,data );
         }catch(error){
             console.log(error);
@@ -208,8 +210,8 @@ const Product = ({ items, setItems }) => {
                             }} />
                             <button
                                 onClick={handleRatings}
-                                className={`bg-red-500 cursor-pointer py-2 px-7 text-white rounded-sm`}>
-                                Rate Product
+                                className={`${rated ? 'bg-green-400': ' bg-red-500'} cursor-pointer py-2 px-7 text-white rounded-sm`}>
+                                    {rated ? 'Rated sucess':'Rate Product'}
                             </button>
                         </div>}
 

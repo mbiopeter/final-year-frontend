@@ -1,4 +1,6 @@
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { customerUrl } from "../../const";
 export const getUserId = () => {
     try {
         const token = localStorage.getItem("authToken");
@@ -13,6 +15,15 @@ export const getUserId = () => {
             return;
         }
         return userId;
+    } catch (error) {
+        return;
+    }
+};
+
+export const getUserDetails = async (userId) => {
+    try {
+        const response = await axios.get(`${customerUrl}`, { params: { userId } });
+        return response.data;
     } catch (error) {
         return;
     }

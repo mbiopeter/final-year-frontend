@@ -42,7 +42,7 @@ const WishList = () => {
                 </div>
                 {recommendations.length > 0 &&<div className='flex flex-col pb-[10px] lg:pb-[20px]  pt-15 mb-20'>
                     <SubHeading heading="Just for you" title='Recommendations' btn={true} btnText='See All'/>
-                    <div className='grid grid-cols-2 gap-10 lg:gap-15 lg:flex lg:flex-wrap  justify-start items-center'>
+                    <div className='grid grid-cols-2 gap-10 lg:gap-10 lg:flex lg:flex-wrap  justify-start items-center'>
                         {recommendations.map((item, index) => (
                             <Products item={item} key={index} />
                         ))}
