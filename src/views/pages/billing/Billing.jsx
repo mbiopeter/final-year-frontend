@@ -86,7 +86,10 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
                     email: billingInfo.email,
                     userId:userId,
                     cartItems: billedItems.map((item) => ({
-                        productId:item.productId,
+                        productId:{
+                            id:item.productId,
+                            quantity:item.quantity
+                        },
                         img: item.img,
                         price: Number(item.price).toFixed(2),
                         product: item.product,
@@ -103,8 +106,14 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
             if(selectedPaymentMethod === "cashOnDelivery"){
                 const cashData = {
                     userId:userId,
+                    email: billingInfo.email,
                     cartItems: billedItems.map((item) => ({
-                        productId:item.productId,
+                        productId:{
+                            id:item.productId,
+                            quantity:item.quantity
+                        },
+                        price: Number(item.price).toFixed(2),
+                        name: item.product,
                     }))
                 };
                 const response = await axios.post(`${orderUrl}/new`,cashData);

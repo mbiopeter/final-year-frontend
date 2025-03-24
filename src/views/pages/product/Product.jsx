@@ -20,7 +20,8 @@ const Product = ({ items, setItems }) => {
     const [loading, setLoading] = useState(false);
     const { productId } = useParams();
     const [wishList, setWishList] = useState([]);
-    const [rated, setRated] = useState(false)
+    const [rated, setRated] = useState(false);
+    const [available, setAvailable] = useState()
 
     useEffect(() => {
         const handleFetch =async () => {
@@ -155,6 +156,14 @@ const Product = ({ items, setItems }) => {
         }
     }
 
+    useEffect(() => {
+        if(product && product.amountLeft < quantity){
+            setAvailable(false);
+        }else{
+            setAvailable(true);
+        }
+    },[product, quantity])
+
     if (!product) return <Error404 />;
 
 
@@ -222,9 +231,14 @@ const Product = ({ items, setItems }) => {
                                 <button className='w-10 text-lg font-bold bg-red-500 text-white' onClick={increment}>+</button>
                             </div>
                             <button
-                                onClick={handleAddCart}
-                                className={`${isOrdered ? 'bg-green-500 cursor-not-allowed' : 'bg-red-500 cursor-pointer'} py-2 px-7 text-white rounded-sm`}>
-                                {isOrdered ? 'Order Placed' : 'Add To Cart'}
+                                onClick={available ? handleAddCart: null}
+                                className={`
+                                    ${isOrdered ? 'bg-green-500 cursor-not-allowed' 
+                                    :available === false ? 'bg-gray-500 cursor-not-allowed' 
+                                    :'bg-red-500 cursor-pointer'} py-2 px-7 text-white rounded-sm`}>
+                                {isOrdered ? 'Order Placed'
+                                :available === false ? 'Out of stock' 
+                                : 'Add To Cart'}
                             </button>
                             <div className='p-2 border rounded-sm w-10 h-10 flex items-center justify-center'>
                                 <FavoriteIcon
