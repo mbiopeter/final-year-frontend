@@ -39,14 +39,13 @@ const ScrollToTop = () => {
 const NotFound = () => <Error404 />;
 
 function App() {
-	const[reload,setReload] = useState(false);
 	const [userId, setUserId] = useState(getUserId());
 	const [items, setItems] = useState([]);
 	const [fetch, setFetch] = useState(false);
 
 	useEffect(() => {
 		setUserId(getUserId());
-	},[reload])
+	},[fetch])
 		
 	useEffect(() => {
 		const handleCart = async () => {
@@ -54,7 +53,7 @@ function App() {
 			setItems(await handleFetchCart(userId))
 		}
 		handleCart();
-	},[userId]);
+	},[userId, fetch]);
 	
 	return (
 		<PrimeReactProvider>
@@ -62,12 +61,12 @@ function App() {
 				<ScrollToTop />
 				<div>
 					{/* upbar */}
-					<UpBar cartItems={items} reload={reload} setReload={setReload}/>
+					<UpBar cartItems={items} fetch={fetch} setFetch={setFetch}/>
 					<Routes>
 						{/* Pages routes */}
 						<Route path="/" element={<Home />} />
-						<Route path="/auth" element={<Authentication setFetch={setReload} reload={fetch} />} />
-						<Route path="/cart" element={<Cart items={items} setItems={setItems} setReload={setReload} reload={reload} />}/>
+						<Route path="/auth" element={<Authentication setFetch={setFetch} reload={fetch} />} />
+						<Route path="/cart" element={<Cart items={items} setItems={setItems} setFetch={setFetch} reload={fetch} />}/>
 						<Route path="/abaut" element={<Abaut />} />
 						<Route path="/wishlist" element={<WishList />} />
 						<Route path="/contact" element={<Contact />} />
@@ -75,7 +74,7 @@ function App() {
 						<Route path="/orders" element={<Orders />} />
 						<Route path="/history" element={<History />} />
 						<Route path="/cancellation" element={<Cancellation />} />
-						<Route path="/billing" element={<Billing billedItems={items} />} />
+						<Route path="/billing" element={<Billing billedItems={items} setFetch={setFetch} fetch={fetch} />} />
 						<Route path="/product/:productId" element={<Product items={items} setItems={setItems} />}/>
 						<Route path="/category/:categoryId" element={<Category />} />
 						<Route path="/category/:categoryId/:subcategory" element={<SubCategory />}/>

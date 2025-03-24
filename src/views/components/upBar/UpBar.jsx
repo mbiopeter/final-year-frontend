@@ -17,7 +17,7 @@ import { fetchProductsHelper } from "../../../model/products/products";
 import { getUserId } from "../../../model/auth/token";
 import { logOut } from "../../../model/auth/logout";
 
-const UpBar = ({ cartItems , reload, setReload}) => {
+const UpBar = ({ cartItems , fetch, setFetch}) => {
 	const navigate = useNavigate();
 	const cartItemsCount = cartItems.length;
 	const [active, setActive] = useState("Home");
@@ -73,12 +73,12 @@ const UpBar = ({ cartItems , reload, setReload}) => {
 
 	useEffect(() => {
 		setUserId(getUserId());
-	}, [reload]);
+	}, [fetch]);
 
 	const handleLogOut = () => {
 		logOut();
 		setDropdownVisible(false);
-		setReload(!reload);
+		setFetch(!fetch);
 	}
 	
 

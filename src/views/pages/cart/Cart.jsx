@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { cartUrl } from "../../../const";
 
-const Cart = ({ items, setItems, reload, setReload }) => {
+const Cart = ({ items, setItems, fetch, setFetch }) => {
 	const [total, setTotal] = useState(0);
 	const [shipping, setShipping] = useState(0);
 
@@ -13,7 +13,7 @@ const Cart = ({ items, setItems, reload, setReload }) => {
 	const firstSegment = location.pathname.split("/").filter(Boolean)[0]; 
 		useEffect(() => {
 			if(firstSegment === 'cart'){
-				setReload(!reload);
+				setFetch(!fetch);
 			}
 		},[firstSegment])
 
@@ -86,7 +86,7 @@ const Cart = ({ items, setItems, reload, setReload }) => {
 									/>
 									<span>{item.product}</span>
 								</td>
-								<td className=" min-w-[100px]">${item.price}</td>
+								<td className=" min-w-[100px]">ksh.{item.price}</td>
 								<td className=" min-w-[200px]">
 									<input
 										type="number"
@@ -99,7 +99,7 @@ const Cart = ({ items, setItems, reload, setReload }) => {
 									/>
 								</td>
 								<td className=" min-w-[200px]">
-									${item.price * item.quantity}
+									ksh.{item.price * item.quantity}
 								</td>
 								<td className="flex justify-center">
 									<DeleteIcon
@@ -155,7 +155,7 @@ const Cart = ({ items, setItems, reload, setReload }) => {
 								Subtotal:
 							</span>
 							<span className="text-[16px] text-[#000000] font-[400]">
-								${total}
+								ksh.{total}
 							</span>
 						</div>
 						<div className="flex flex-row justify-between items-center mt-7 border-b-[#ddd] border-b-[2px] py-2">
@@ -171,7 +171,7 @@ const Cart = ({ items, setItems, reload, setReload }) => {
 								Total:
 							</span>
 							<span className="text-[16px] text-[#000000] font-[400]">
-								${total + shipping}
+								ksh.{total + shipping}
 							</span>
 						</div>
 
