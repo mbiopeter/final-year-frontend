@@ -48,14 +48,9 @@ const UpBar = ({ cartItems , fetch, setFetch}) => {
 			icon: <PersonIcon fontSize="small" className="text-[#FAFAFA]" />,
 		},
 		{
-			name: "Track My Orders",
+			name: "My Orders",
 			to: "/orders",
 			icon: <LocalMallIcon fontSize="small" className="text-[#FAFAFA]" />,
-		},
-		{
-			name: "My Cancellations",
-			to:"/cancellation",
-			icon: <DoNotDisturbIcon fontSize="small" className="text-[#FAFAFA]" />,
 		},
 		{
 			name: "My Previews",

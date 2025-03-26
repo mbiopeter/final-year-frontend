@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DeveloperBoardOutlinedIcon from '@mui/icons-material/DeveloperBoardOutlined';
 import HourglassTopOutlinedIcon from '@mui/icons-material/HourglassTopOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -18,15 +18,16 @@ import Loader from "../../components/loader/Loader";
 
 const Orders = () => {
     const userId = getUserId();
-    const [order, setOrder] = useState(null);
+    const [order, setOrder] = useState({});
 	const [loading, setLoading] = useState(false);
+	const {orderId} = useParams();
 
     useEffect(() => {
         const fetchOrder = async () => {
             try {
 				setLoading(true);
-                const response = await axios.get(`${orderUrl}/one`, { params: { userId } });
-                setOrder(response.data[0]); // Assuming only one order is fetched
+                const response = await axios.get(`${orderUrl}/one`, { params: { userId,orderId } });
+                setOrder(response.data);
             } catch (error) {
                 console.log(error);
             }finally{
@@ -36,6 +37,7 @@ const Orders = () => {
 			}
         };
         fetchOrder();
+		
     }, []);
 
     if (!order) return <Error404 />;

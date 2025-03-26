@@ -22,9 +22,9 @@ import Error404 from "./views/pages/error/Error404";
 import Category from "./views/pages/category/Category";
 import SubCategory from "./views/subCategory/SubCategory";
 import History from "./views/pages/history/History";
-import Cancellation from "./views/pages/cancellation/Cancellation";
 import { handleFetchCart } from "./model/cart/cart";
 import { getUserId } from "./model/auth/token";
+import AllOrders from "./views/pages/allOrders/AllOrders";
 
 const ScrollToTop = () => {
 	const { pathname } = useLocation();
@@ -71,9 +71,9 @@ function App() {
 						<Route path="/wishlist" element={<WishList />} />
 						<Route path="/contact" element={<Contact />} />
 						<Route path="/account" element={<Account />} />
-						<Route path="/orders" element={<Orders />} />
+						<Route path="/orders" element={<AllOrders />} />
+						<Route path="/orders/:orderId" element={<Orders />} />
 						<Route path="/history" element={<History />} />
-						<Route path="/cancellation" element={<Cancellation />} />
 						<Route path="/billing" element={<Billing billedItems={items} setFetch={setFetch} fetch={fetch} />} />
 						<Route path="/product/:productId" element={<Product items={items} setItems={setItems} />}/>
 						<Route path="/category/:categoryId" element={<Category />} />
