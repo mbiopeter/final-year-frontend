@@ -1,35 +1,73 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { customerUrl } from "../../../const";
+import { getUserDetails, getUserId } from "../../../model/auth/token";
+import Loader from "../../components/loader/Loader";
 
 const Account = () => {
+	const userId = getUserId();
+	const [user,setUser] = useState({});
+	useEffect(() => {
+		const handleFetchDetails = async() => {
+			setUser(await getUserDetails(userId));
+		}
+		handleFetchDetails();
+	},[])
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
 	const [address, setAddress] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	console.log("Awaiting stuff: ");
+	const [loading, setLoading] = useState(false);
+	const[error, setError] = useState();
+	const [message, setMessage] = useState();
 
-	useEffect(() => {
-		setFirstName(firstName);
-		setLastName(lastName);
-		setEmail(email);
-		setAddress(address);
-		setPassword(password);
-		setConfirmPassword(confirmPassword);
-		console.log(
-			firstName + lastName + email + address + password + confirmPassword
-		);
-	}, []);
 
-	function submitChanges(e) {
-		e.preventDefault();
-		console.log(
-			"Submits: ",
-			firstName + lastName + email + address + password + confirmPassword
-		);
+
+	const submitChanges = async() => {
+		const data = {
+			userId,
+			firstName,
+			lastName,
+			email,
+			conPassword:confirmPassword
+		}
+		try{
+			setError(false);
+			const response = await axios.post(`${customerUrl}/accounts`,data);
+			setMessage(response.data.message);
+		}catch(error){
+			setError(true);
+			setMessage(error.response.data);
+		}
 	}
 
+	useEffect(() => {
+		const handleFetch = async () => {
+			try{
+				setLoading(true);
+				if(userId){
+					const userDetails = await getUserDetails(userId);
+					setFirstName(userDetails?.firstName || ""),
+					setLastName(userDetails?.lastName || ""),
+					setAddress(userDetails?.streetAddress || ""),
+					setEmail(userDetails?.email || "")
+				}
+			}catch(error){
+				return
+			}finally{
+				setTimeout(() => {
+					setLoading(false);
+				}, 1000);
+			}
+		}
+		handleFetch();
+	},[userId]);
+
+
 	return (
+		loading ? <Loader />:
 		<div className="w-full flex h-auto flex-col py-[20px] px-[50px] lg:px-[130px]">
 			<div className="flex flex-row my-4 lg:m-12 justify-between gap-1.5">
 				<div>
@@ -38,9 +76,9 @@ const Account = () => {
 				</div>
 				<div>
 					Welcome,{" "}
-					<span className="text-red-500 lg:mr-[48px]  font-semibold">
-						Emmanuel
-					</span>
+					{user &&<span className="text-red-500 lg:mr-[48px] capitalize  font-semibold">
+						{user.firstName} {user.lastName}
+					</span>}
 				</div>
 			</div>
 			<div className="container flex flex-col gap-10 lg:gap-0 lg:flex-row justify-between h-auto mb-10 ">
@@ -106,10 +144,11 @@ const Account = () => {
 								Email
 							</label>
 							<input
+								readOnly
 								type="email"
 								id="email"
 								value={email}
-								className="bg-gray-200 p-3 rounded-md"
+								className="bg-gray-200 p-3 rounded-md outline-none text-gray-500 cursor-not-allowed"
 								placeholder="Enter email"
 								required
 								onChange={(e) => setEmail(e.target.value)}
@@ -159,7 +198,9 @@ const Account = () => {
 							onChange={(e) => setConfirmPassword(e.target.value)}
 						/>
 					</div>
-
+					<div className="flex items-center justify-center mt-3">
+						<span className={`text-[12px] text-center ${error ? 'text-red-500': 'text-green-500'} font-[600]`}>{message && message}</span>
+					</div>
 					{/* Buttons */}
 					<div className="flex justify-end gap-10 mt-6">
 						<button className="text-gray-700 bg-gray-200 p-3 rounded-md px-6">

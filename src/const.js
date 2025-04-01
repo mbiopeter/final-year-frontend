@@ -7,3 +7,5 @@ export const sliderUrl = `${serverUrl}/slider`;
 export const customerUrl = `${serverUrl}/customer`;
 export const stripeUrl = `${serverUrl}/stripe`;
 export const orderUrl = `${serverUrl}/order`;
+export const mpesaUrl = `${serverUrl}/mpesa`;
+export const contactUrl = `${serverUrl}/contact`;

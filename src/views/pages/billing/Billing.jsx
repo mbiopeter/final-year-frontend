@@ -3,11 +3,12 @@ import { TextField, Radio, Button } from '@mui/material';
 import { CreditCard, LocalShipping } from '@mui/icons-material';
 import { getUserDetails, getUserId } from '../../../model/auth/token';
 import axios from 'axios';
-import { customerUrl, orderUrl, stripeUrl } from '../../../const';
+import { customerUrl, mpesaUrl, orderUrl, stripeUrl } from '../../../const';
 import Loader from '../../components/loader/Loader';
 const Billing = ({ billedItems, setFetch, fetch }) => {
     const userId = getUserId();
     const[loading, setLoading] = useState(false);
+    const [mpesaMessage, setMpesaMessage] = useState();
 
     const [billingInfo, setBillingInfo] = useState({
         firstName: '',
@@ -20,7 +21,7 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
 
     let total = 0;
     let shipping = 0;
-    billedItems.map((item) => {
+    billedItems.length > 0 && billedItems.map((item) => {
         total += item.quantity * item.price;
     });
 
@@ -120,6 +121,24 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
                 setOrderStatus(response.data.message);
                 setFetch(!fetch);
             }
+            if(selectedPaymentMethod === "mpesa" && billingInfo.phoneNumber !== ''){
+                const mpesaData = {
+                    userId:userId,
+                    email: billingInfo.email,
+                    phoneNumber: billingInfo.phoneNumber,
+                    cartItems: billedItems.map((item) => ({
+                        productId:{
+                            id:item.productId,
+                            quantity:item.quantity
+                        },
+                        price: Number(item.price).toFixed(2),
+                        name: item.product,
+                    }))
+                };
+                const response = await axios.post(`${mpesaUrl}/stkpush`,mpesaData);
+                setMpesaMessage(response.data.message);
+            };
+
         } catch (error) {
             console.error(error);
         } finally {
@@ -199,7 +218,7 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {billedItems.map((item, index) => (
+                        {billedItems.length > 0 && billedItems.map((item, index) => (
                         <tr key={index}>
                             <td className="flex justify-start flex-row gap-5 items-center py-5 min-w-[150px]">
                                 <img src={item.img} className="object-fit h-[30px] w-[30px] overflow-hidden" />
@@ -261,15 +280,17 @@ const Billing = ({ billedItems, setFetch, fetch }) => {
                         <LocalShipping className="text-blue-500" />
                     </div>
                     </div>
-
+                    {mpesaMessage && <div className='flex flex-center justify-center'>
+                        <span className='text-green-600 text-center text-[12px] font-[600]'>{mpesaMessage}</span>
+                    </div>}
                     <div className="flex flex-wrap lg:flex-nowrap gap-2">
-                    <TextField label="Coupon Code" variant="outlined" size="small" className="w-full lg:min-w-[65%]" />
-                    <Button variant="contained" color="error" className="w-full lg:w-auto text-nowrap">
-                        Apply Coupon
-                    </Button>
+                        <TextField label="Coupon Code" variant="outlined" size="small" className="w-full lg:min-w-[65%]" />
+                        <Button variant="contained" color="error" className="w-full lg:w-auto text-nowrap">
+                            Apply Coupon
+                        </Button>
                     </div>
                     {billedItems.length > 0 &&<button onClick={orderStatus === false ?handlePaymentRequests: null} className={`${orderStatus ? 'bg-green-600 cursor-not-allowed': 'bg-red-600 cursor-pointer'} mt-4 w-full text-white rounded-sm  py-2`}>
-                        {paymentLoading ? 'Redirecting...': orderStatus ? 'OrderPlaced' :'Place Order'}
+                        {paymentLoading ? 'Loading...': orderStatus ? 'OrderPlaced' :'Place Order'}
                     </button>}
                 </div>
                 </div>

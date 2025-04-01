@@ -40,17 +40,17 @@ const NotFound = () => <Error404 />;
 
 function App() {
 	const [userId, setUserId] = useState(getUserId());
-	const [items, setItems] = useState([]);
 	const [fetch, setFetch] = useState(false);
 
 	useEffect(() => {
 		setUserId(getUserId());
-	},[fetch])
-		
+	},[fetch]);
+
+	const [items, setItems] = useState([]);
 	useEffect(() => {
 		const handleCart = async () => {
 			
-			setItems(await handleFetchCart(userId))
+			setItems(await handleFetchCart(userId) ||[])
 		}
 		handleCart();
 	},[userId, fetch]);
@@ -58,7 +58,7 @@ function App() {
 	return (
 		<PrimeReactProvider>
 			<Router>
-				<ScrollToTop />
+				<ScrollToTop  />
 				<div>
 					{/* upbar */}
 					<UpBar cartItems={items} fetch={fetch} setFetch={setFetch}/>

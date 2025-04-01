@@ -11,7 +11,7 @@ import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { Stepper, Step, StepLabel, Box, Typography } from "@mui/material";
 import { orderUrl } from "../../../const";
 import axios from "axios";
-import { getUserId } from "../../../model/auth/token";
+import { getUserDetails, getUserId } from "../../../model/auth/token";
 import Error404 from "../error/Error404";
 import Loader from "../../components/loader/Loader";
 
@@ -40,6 +40,44 @@ const Orders = () => {
 		
     }, []);
 
+	const [billingInfo, setBillingInfo] = useState({
+		firstName: '',
+		streetAdress: '',
+		apartment: '',
+		town: '',
+		phoneNumber: '',
+		email: '',
+	});
+
+
+	useEffect(() => {
+		const handleFetch = async () => {
+			try{
+				setLoading(true);
+				if(userId){
+					const userDetails = await getUserDetails(userId);
+					setBillingInfo({
+						firstName: userDetails?.firstName || "",
+						streetAdress: userDetails?.streetAddress || "",
+						apartment: userDetails?.apartment || "",
+						town: userDetails?.town || "",
+						phoneNumber: userDetails?.phoneNumber || "",
+						email: userDetails?.email || "",
+					});
+				}
+			}catch(error){
+				return
+			}finally{
+				setTimeout(() => {
+					setLoading(false);
+				}, 1000);
+			}
+		}
+		handleFetch();
+	},[userId]);
+	console.log(billingInfo);
+
+
     if (!order) return <Error404 />;
 
     const orderSteps = [
@@ -51,18 +89,6 @@ const Orders = () => {
         { label: "Waiting to be picked", key: "waitingDelivery", icon: <HourglassTopOutlinedIcon /> },
         { label: "Cancelled", key: "cancelled", icon: <CancelOutlinedIcon /> },
         { label: "Returned", key: "returned", icon: <AssignmentReturnedOutlinedIcon /> },
-    ];
-
-    const billingInfo = [
-        {
-            label: "Billing information",
-            details: "Individual: Bonnie Green - +1 234 567 890",
-            address: "San Francisco, California, United States, 3454, Scott Street",
-        },
-        {
-            label: "The amount paid / to be paid",
-            description: "$7,191.00",
-        },
     ];
 
     return (
@@ -111,14 +137,11 @@ const Orders = () => {
 						</div>
 
 						<div className="shadow-md lg:w-2/4 lg:m-2 gap-10 p-2 lg:p-6 h-auto">
-							{billingInfo.map((info, index) => (
-								<div key={index} className="bg-gray-100 shadow-md mb-4 lg:mb-10 p-4 lg:p-7">
-									<h1 className="font-bold pb-2">{info.label}</h1>
-									{info.description && <p className="font-semibold text-gray-600">{info.description}</p>}
-									{info.details && <p className="text-gray-600">{info.details}</p>}
-									{info.address && <p className="text-gray-600">{info.address}</p>}
+								<div className="bg-gray-100 shadow-md mb-4 lg:mb-10 p-4 lg:p-7">
+									<h1 className="font-bold pb-2">Billing Information</h1>
+									<p className="font-semibold text-gray-600">{billingInfo.firstName}, {billingInfo.apartment}, {billingInfo.streetAdress},<br /> {billingInfo.phoneNumber} </p>
+
 								</div>
-							))}
 							<button className="py-2 text-white bg-red-500 cursor-pointer rounded-sm w-full font-[700]">CANCEL ORDER</button>
 						</div>
 					</div>

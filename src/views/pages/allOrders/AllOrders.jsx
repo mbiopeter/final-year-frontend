@@ -54,7 +54,7 @@ const AllOrders = () => {
                     <div className="flex flex-col gap-5 overflow-auto w-full lg:w-[47%] h-[55vh]  shadow-xl p-5">
                         <span className='text-[14px] font-bold uppercase '>Active orders</span>
                         <table className="min-w-full text-nowrap">
-                            <thead className="border-b-[1px] border-b-[#e2dfdf] sticky top-0">
+                            <thead className="border-b-[1px] border-b-[#e2dfdf]  bg-white top-0">
                                 <tr className='py-5'>
                                     <td>Order Id</td>
                                     <td>Order Date</td>

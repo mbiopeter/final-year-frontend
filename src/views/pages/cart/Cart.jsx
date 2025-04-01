@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import img from "../../../assets/images/slider1.png";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { cartUrl } from "../../../const";
+import Loader from "../../components/loader/Loader";
+import { getUserId } from "../../../model/auth/token";
+import { handleFetchCart } from "../../../model/cart/cart";
 
 const Cart = ({ items, setItems, fetch, setFetch }) => {
 	const [total, setTotal] = useState(0);
 	const [shipping, setShipping] = useState(0);
+	const [loading, setLoading] = useState()
+	const [userId, setUserId] = useState(getUserId());
 
 	const location = useLocation();
 	const firstSegment = location.pathname.split("/").filter(Boolean)[0]; 
@@ -32,6 +36,20 @@ const Cart = ({ items, setItems, fetch, setFetch }) => {
 		setItems(updatedItems);
 	};
 
+	const handleFetchCartHelper = async () => {
+		try{
+			setLoading(true)
+			const cartItems = await handleFetchCart(userId);
+			setItems(cartItems);
+		}catch(error){
+			return;
+		}finally{
+			setTimeout(() => {
+				setLoading(false);
+			},1000)
+		}
+	}
+
 	const handleDeleteItem = async (itemToDelete) => {
 		try{
 			const updatedItems = items.map((item) =>
@@ -52,7 +70,12 @@ const Cart = ({ items, setItems, fetch, setFetch }) => {
 		}
 	};
 
+	useEffect(() => {
+		handleFetchCartHelper();
+	},[])
+
 	return (
+		loading ? <Loader />:
 		<div className="w-full flex flex-col pb-10 px-[50px] lg:px-[150px]">
 			<div className="flex justify-start items-center py-10">
 				<div className="flex flex-row gap-1">

@@ -112,8 +112,11 @@ const Product = ({ items, setItems }) => {
                     userId,
                     quantity
                 }
-                setItems(prev => [...prev, { productId:product.id, img:`${serverUrl}/${product.images[0]}`, product: product.name, price: product.offerPrice, quantity }]);
                 await axios.post(`${cartUrl}/new`, cartItem);
+                setItems(prev => {
+                    return Array.isArray(prev) ? [...prev, { productId: product.id, img: `${serverUrl}/${product.images[0]}`, product: product.name, price: product.offerPrice, quantity }] : [{ productId: product.id, img: `${serverUrl}/${product.images[0]}`, product: product.name, price: product.offerPrice, quantity }];
+                });
+                
                 
             }
         }catch(error){

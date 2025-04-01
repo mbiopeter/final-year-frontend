@@ -1,6 +1,34 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { contactUrl } from "../../../const";
 
 const Contact = () => {
+	const [error, setError] = useState();
+	const [response, setResponse] = useState()
+	const [message, setMessage] = useState({
+		name:"",
+		email:"",
+		phoneNumber:"",
+		mess:""
+	});
+
+	const handleInputs = (key, value) => {
+		setMessage(prev => ({
+			...prev,
+			[key]: value
+		}));
+	};
+
+	const handleSendmessage = async () => {
+		try{
+			setError(false);
+			const response = await axios.post(`${contactUrl}`, message);
+			setResponse(response.data.message)
+		}catch(error){
+			setError(true);
+			setResponse(error.response.data);
+		}
+	}
 	return (
 		<div className="w-full flex  flex-col py-[20px] px-[50px] lg:px-[130px]">
 			<div className="flex flex-row my-6   gap-1.5">
@@ -38,18 +66,24 @@ const Contact = () => {
 				<div className=" textbox shadow-sm p-5 flex-row w-full lg:w-[45%] ">
 					<div className="details flex flex-col gap-2 sm:flex-row justify-between">
 						<input
+							onChange={(e) => handleInputs("name", e.target.value)}
+							value={message.name}
 							type="text"
 							className="bg-gray-200 w-full outline-0 p-4 rounded-md "
 							placeholder="Your Name*"
 							required
 						/>
 						<input
+							onChange={(e) => handleInputs("email", e.target.value)}
+							value={message.email}
 							type="email"
 							className="bg-gray-200 w-full outline-0 p-4 rounded-md "
 							placeholder="Your Email*"
 							required
 						/>
 						<input
+							onChange={(e) => handleInputs("phoneNumber", e.target.value)}
+							value={message.phoneNumber}
 							type="text"
 							className="bg-gray-200 w-full outline-0 p-4 rounded-md "
 							placeholder="Your Phone number*"
@@ -58,14 +92,16 @@ const Contact = () => {
 					</div>
 					<div className="textbox my-4">
 						<textarea
+							onChange={(e) => handleInputs("mess", e.target.value)}
+							value={message.mess}
 							className=" w-full  bg-gray-200 outline-0 p-2 rounded-md"
 							placeholder="Your message"
 							cols="100"
 							rows="10"></textarea>
 					</div>
-					<div className="flex flex-row-reverse">
-						<div className="button flex justify-center  w-50 bg-red-500 p-2 rounded-md">
-							<button className="flex   text-white font-semibold">
+					<div className="flex flex-col items-center gap-4">
+						<span className={`text-[12px] text-center ${error ? 'text-red-500': 'text-green-500'} font-[600]`}>{response && response}</span>
+						<div className="button flex justify-center  w-50 bg-red-500 p-2 rounded-md">							<button onClick={handleSendmessage} className="flex   text-white font-semibold">
 								Send Message
 							</button>
 						</div>
